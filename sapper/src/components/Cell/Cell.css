@@ -1,0 +1,13 @@
+.cell {
+  height: 18px;
+  width: 18px;
+  background-position-y: -134px;
+}
+
+.cellbbb {
+  background-position: 123px -134px;
+}
+
+.flag {
+  background-position: 106px -134px;
+}
