@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.counts {
+  display: flex;
+}
+
+.count {
+  height: 24px;
+  width: 13px;
+  background-position-y:-84px;
+}
+
+.smile {
+  margin: 0 80px;
+  height: 26px;
+  width: 26px;
+  background-position: -1px -109px;
+}
