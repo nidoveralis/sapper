@@ -82,26 +82,27 @@ function App() {
     openBlankCells(item);
   };
 
-  function findOpenNextCells() {
+  function findOpenNextCells() {//открывает соседние клетки
     openCells.forEach(item=>{
-      field[item].sosed.forEach((el)=>{
+      if(field[item].count===0) {
+        field[item].sosed.forEach((el)=>{
           if(!openCells.includes(el)) {
             openCells.push(el);
+            findOpenNextCells();
+           // console.log(openCells.sort((a, b) => a - b))
           }
         })
+      }
     })
   };
 
   function openBlankCells(item) {///открывает соседей
-    openCells.push(item.index);
+    if(!openCells.includes(item.index)) {
+      openCells.push(item.index);
     if(item.count === 0) {
-      item.sosed.forEach(element => {
-        openCells.push(element)
-        findOpenNextCells() 
-      });
-      //console.log(openCells)
-    }
-  }
+        findOpenNextCells();      
+    }}
+  };
 
   function plantFlag() {
     setBombsCount(bombsCount - 1);
