@@ -25,7 +25,7 @@ function App() {
     
   function makeField() {
     for(let i =0; i<256; i++) {
-      field.push({index: i, opened: false, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[]})
+      field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[]})
     }
     getRandomArray()
   } 

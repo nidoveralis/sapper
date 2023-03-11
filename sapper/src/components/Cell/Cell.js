@@ -59,28 +59,22 @@ function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,o
       y: '-134px'
     }
   };
-  const z=openCells.includes(item.index)
-  const [op,setOp] = React.useState(openCells.includes(item.index))
-  const [isFlag, setIsFlag] = React.useState()
+  const [isFlag, setIsFlag] = React.useState(imgPosition.blanck);
   const [start, setStart] = React.useState(false);
-  const backgroundX = z ? imgPosition[item.count].x : imgPosition.blanck.x;
-  const backgroundY = z ? imgPosition[item.count].y : imgPosition.blanck.y;
-  //const a = op ? imgPosition[item.count].x : imgPosition.blanck.x;
-  //const b = op ? imgPosition[item.count].y : imgPosition.blanck.y;
+  const backgroundX = openCells.includes(item.index) ? imgPosition[item.count].x : imgPosition.blanck.x;
+  const backgroundY = openCells.includes(item.index) ? imgPosition[item.count].y : imgPosition.blanck.y;
 
-
-  function openCell() {
-    console.log(item);
-    
+  function openCell() {    
     countStart(item)
-    handelBlanckCell()
     setStart(true)
    if(!item.isBomb) {
     setIsFlag(imgPosition[item.count]);
+    handelBlanckCell()
    }else if(item.isBomb) {
-    setIsFlag(imgPosition.bomb);
     openBombs()
+    setIsFlag(imgPosition.bomb);
    }
+   console.log(item);
   };
 
   React.useEffect(()=>{
@@ -91,21 +85,14 @@ function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,o
     }
    },[bigBoom]);
 
-   //React.useEffect(()=>{
-    //console.log(openCells)
-   
-    //if(openCells.includes(item.index) ) {
-      //setOp(true)
-   // }
-   //},[start]);
-
   return(
     <>
-      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb?imgPosition.blanck.x:backgroundX}`, backgroundPositionY:`${item.isBomb?imgPosition.blanck.y:backgroundY}`}} onClick={openCell} >
+      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} >
       </div>
     </>
   )
 }
 export default Cell;
+//
 //{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}
 //onContextMenu={clickCell} 
