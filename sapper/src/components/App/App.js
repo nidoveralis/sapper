@@ -63,8 +63,10 @@ function App() {
     for(let i =0; i<256; i++) {
          if(bombs.includes(i)) {
            field[i].isBomb=true;
+           field[i].state='blanck';
          } else {
           field[i].isBomb=false;
+          field[i].state='blanck';
         }
      } 
   };
@@ -78,7 +80,7 @@ function App() {
       addedBombs()
       findNextCell()
     }
-    field[item.index].opened=true;
+    item.state='opened';
     openBlankCells(item);
   };
 
@@ -88,6 +90,7 @@ function App() {
         field[item].sosed.forEach((el)=>{
           if(!openCells.includes(el)) {
             openCells.push(el);
+            field[el].state='opened';
             findOpenNextCells();
            // console.log(openCells.sort((a, b) => a - b))
           }

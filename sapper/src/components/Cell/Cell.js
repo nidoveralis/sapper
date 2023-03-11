@@ -77,6 +77,22 @@ function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,o
    console.log(item);
   };
 
+  function clickCell(e) {
+    e.preventDefault();
+    
+    if(item.state==='blanck') {
+      console.log(item)
+      item.state='flag'
+      setIsFlag(imgPosition.flag);
+    }else if(item.state==='flag') {
+      item.state='question'
+      setIsFlag(imgPosition.question);
+    }else if(item.state==='question') {
+      item.state='blanck'
+      setIsFlag(imgPosition.blanck);
+    }
+  };
+
   React.useEffect(()=>{
     if(bigBoom) {
       if(item.isBomb) {
@@ -87,7 +103,7 @@ function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,o
 
   return(
     <>
-      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} >
+      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} onContextMenu={clickCell}  >
       </div>
     </>
   )
