@@ -3,60 +3,60 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,open,field,bigBoom,openCells}) {
+function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,open,field,bigBoom,openCells,startGame,gameOver}) {
 
   const imgPosition = {
     0:{
-      x:'123px',
-      y:'-134px'
+      x:'122px',
+      y:'-135px'
     },
     1:{
-      x:'140px',
-      y:'-67px'
+      x:'139px',
+      y:'-68px'
     },
     2:{
-      x:'123px',
-      y:'-67px'
+      x:'122px',
+      y:'-68px'
     },
     3:{
-      x:'106px',
-      y:'-67px'
+      x:'105px',
+      y:'-68px'
     },
     4:{
-      x:'89px',
-      y:'-67px'
+      x:'88px',
+      y:'-68px'
     },
     5:{
-      x:'72px',
-      y:'-67px'
+      x:'71px',
+      y:'-68px'
     },
     6:{
-      x:'55px',
-      y:'-67px'
+      x:'54px',
+      y:'-68px'
     },
     7:{
-      x:'38px',
-      y:'-67px'
+      x:'37px',
+      y:'-68px'
     },
     8:{
-      x:'21px',
-      y:'-67px'
+      x:'20px',
+      y:'-68px'
     },
     bomb:{
-      x:'38px',
-      y:'-134px'
+      x:'37px',
+      y:'-135px'
     },
     question:{
-      x:'89px',
-      y:'-134px'
+      x:'88px',
+      y:'-135px'
     },
     flag:{
-      x:'106px',
-      y:'-134px'
+      x:'105px',
+      y:'-135px'
     },
     blanck: {
-      x:'140px', 
-      y: '-134px'
+      x:'139px', 
+      y: '-135px'
     }
   };
   const [isFlag, setIsFlag] = React.useState(imgPosition.blanck);
@@ -64,51 +64,59 @@ function Cell({countStart,plantFlag,removeFlag,openBombs,item,handelBlanckCell,o
   const backgroundX = openCells.includes(item.index) ? imgPosition[item.count].x : imgPosition.blanck.x;
   const backgroundY = openCells.includes(item.index) ? imgPosition[item.count].y : imgPosition.blanck.y;
 
-  function openCell() {    
+  function openCell() {   
+    //setStart(true);
     countStart(item)
-    setStart(true)
    if(!item.isBomb) {
     setIsFlag(imgPosition[item.count]);
-    handelBlanckCell()
+    handelBlanckCell(item.count===0)
    }else if(item.isBomb) {
-    openBombs()
-    setIsFlag(imgPosition.bomb);
-   }
-   console.log(item);
+    openBombs();
+   };
+   
+   //console.log(item);
   };
 
   function clickCell(e) {
     e.preventDefault();
-    
-    if(item.state==='blanck') {
-      console.log(item)
-      item.state='flag'
+    if(isFlag.x===imgPosition.blanck.x) {
       setIsFlag(imgPosition.flag);
-    }else if(item.state==='flag') {
-      item.state='question'
+      plantFlag();
+      //item.state='flag';
+    }else if(isFlag.x===imgPosition.flag.x) {
+      //item.state='question'
+      removeFlag();
       setIsFlag(imgPosition.question);
-    }else if(item.state==='question') {
-      item.state='blanck'
+    }else if(isFlag.x===imgPosition.question.x) {
+      //item.state='blanck'
       setIsFlag(imgPosition.blanck);
     }
   };
 
-  React.useEffect(()=>{
+  React.useEffect((e)=>{
     if(bigBoom) {
       if(item.isBomb) {
-        setIsFlag(imgPosition.bomb);
+       setIsFlag(imgPosition.bomb);
+       //item.state='bomb';
+       gameOver();
       }
     }
    },[bigBoom]);
 
+   React.useEffect((e)=>{
+    if(open) {
+      if(openCells.includes(item.index)) { 
+       setIsFlag(imgPosition[item.count]);
+       handelBlanckCell(false);
+      }
+    }
+   },[open]);
+
   return(
     <>
-      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} onContextMenu={clickCell}  >
-      </div>
+      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onClick={openCell} onContextMenu={clickCell} disabled={bigBoom}/>
     </>
   )
 }
 export default Cell;
-//
-//{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}
-//onContextMenu={clickCell} 
+//      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} onContextMenu={clickCell}  >

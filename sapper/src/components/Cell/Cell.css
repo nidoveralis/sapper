@@ -1,4 +1,6 @@
 .cell {
-  height: 17px;
-  width: 17px; 
+  height: 16px;
+  width: 16px;
+  border: none;
+  padding: 0;
 }
