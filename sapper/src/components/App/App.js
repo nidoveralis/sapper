@@ -4,14 +4,14 @@ import Header from '../Header/Header';
 import GameField from '../GameField/GameField';
 
 function App() {
-  const [firstCell, setFirstCell] = React.useState();
+ // const [firstCell, setFirstCell] = React.useState();
   const [start, setStart] = React.useState(false);
+  const [loss, setLoss] = React.useState(false);
+
   const [ bombsCount, setBombsCount ] = React.useState(40);
- // const [ bombs, setBombs ] = React.useState([...new Array(40)].map(() => Math.round(Math.random() * 256)));
   const bombs = []
   const field = [];
   const openCells=[]
-  //const [openCells,setOpenCells] = React.useState([]);
 
   function getRandomArray() {//создаёт массив рандомных цифр
   while(bombs.length < bombsCount){
@@ -25,12 +25,12 @@ function App() {
     
   function makeField() {
     for(let i =0; i<256; i++) {
-      field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[]})
+      field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[], state:'blanck'})
     }
     getRandomArray()
-  } 
+  };
 
-  makeField()
+  makeField();
 
   function findNextCell() {///расставляет соседей
     for(let i =0; i<field.length; i++) {
@@ -44,8 +44,9 @@ function App() {
         countNextCell(field[i],field[i].x,field[i].y+1);
         countNextCell(field[i],field[i].x+1,field[i].y+1);
       };
-  }
+  };
   console.log(field)
+  //setStart(true);
 };
 
   function countNextCell(item,x,y) {/// считатет бомбы и соседей
@@ -63,25 +64,10 @@ function App() {
     for(let i =0; i<256; i++) {
          if(bombs.includes(i)) {
            field[i].isBomb=true;
-           field[i].state='blanck';
          } else {
           field[i].isBomb=false;
-          field[i].state='blanck';
         }
      } 
-  };
-
-  function handelBlanckCell(item) {
-    
-  };
-  
-  function countStart(item) {
-    if(openCells.length===0) {
-      addedBombs()
-      findNextCell()
-    }
-    item.state='opened';
-    openBlankCells(item);
   };
 
   function findOpenNextCells() {//открывает соседние клетки
@@ -107,19 +93,39 @@ function App() {
     }}
   };
 
+  function countStart(item) {
+    if(openCells.length===0) {
+      addedBombs();
+      findNextCell();
+    }
+    item.state='opened';
+    openBlankCells(item);
+  };
+
   function plantFlag() {
-    setBombsCount(bombsCount - 1);
+    if(bombsCount<=0) {
+      setBombsCount(0);
+    }else {
+      setBombsCount(bombsCount - 1);
+    }
   };
 
   function removeFlag() {
-    setBombsCount(bombsCount + 1);
+      setBombsCount(bombsCount + 1);
+  };
+
+  function startGame() {
+    setStart(true)
+  };
+
+  function gameOver() {
+    setLoss(!loss);
   };
 
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} />
-      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} handelBlanckCell={handelBlanckCell} open={openCells} />
-      
+      <Header start={start} bombsCount={bombsCount} loss={loss} />
+      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} />
     </div>
   );
 }

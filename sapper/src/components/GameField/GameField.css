@@ -1,4 +1,4 @@
 .field {
   display: grid;
-  grid-template-columns: repeat(16, 18px);
+  grid-template-columns: repeat(16, 16px);
 }
