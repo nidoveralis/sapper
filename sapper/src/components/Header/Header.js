@@ -2,10 +2,8 @@ import React from 'react';
 import './Header.css';
 import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 
-
-function Header({start, bombsCount, loss}) {
+function Header({start, bombsCount, loss, clearField}) {
   const [ time, setTime ] = React.useState(0);
-  const [ startGame, setStartGame ] = React.useState(false);
   const [smile, setSmile] = React.useState('-1px');
   
   const seconds = time % 10;
@@ -13,29 +11,24 @@ function Header({start, bombsCount, loss}) {
   const hundreds = parseInt(time / 100);
   
   function restartGame() {
-    t(0)
-    setStartGame(false);
+    startTime(0)
     setSmile('-1px');
+    clearField();
   };
 
-  function t(data) {
+  function startTime(data) {
     setTimeout(setTime, 1000, data);
   }
 
   React.useEffect(() => {
-    if (startGame) {
-      t(time + 1)
+    if(start) {
+      startTime(time + 1)
     }
-  }, [ time, startGame]);
-  //console.log(start)
-  React.useEffect(() => {
-    setStartGame(start)
-  },[start]);
+  }, [ time, start]);
 
   React.useEffect(() => {
     if(loss) {
       setSmile('31px');
-      setStartGame(false);
     }
   },[loss]);
 

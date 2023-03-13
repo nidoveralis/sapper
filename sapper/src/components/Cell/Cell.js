@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,open,field,bigBoom,openCells,startGame,gameOver}) {
+function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,open,field,bigBoom,openCells,startGame,gameOver, restart}) {
 
   const imgPosition = {
     0:{
@@ -111,6 +111,12 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
       }
     }
    },[open]);
+
+   React.useEffect((e)=>{
+    if(restart) {
+      setIsFlag(imgPosition.blanck)
+    }
+   },[restart]);
 
   return(
     <>

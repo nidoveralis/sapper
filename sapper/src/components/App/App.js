@@ -7,6 +7,7 @@ function App() {
  // const [firstCell, setFirstCell] = React.useState();
   const [start, setStart] = React.useState(false);
   const [loss, setLoss] = React.useState(false);
+  const [restart, setRestart] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
   const bombs = []
@@ -94,10 +95,20 @@ function App() {
   };
 
   function countStart(item) {
-    if(openCells.length===0) {
-      addedBombs();
-      findNextCell();
-    }
+   // if(openCells.length===0) {
+     // addedBombs();
+     // findNextCell();
+   // }
+    setStart(true)
+    setRestart(false)
+    //item.state='opened';
+    //openBlankCells(item);
+    //if(start) {
+      startGame(item);
+    //}
+  };
+
+  function startGame(item) {
     item.state='opened';
     openBlankCells(item);
   };
@@ -114,18 +125,29 @@ function App() {
       setBombsCount(bombsCount + 1);
   };
 
-  function startGame() {
-    setStart(true)
-  };
-
   function gameOver() {
     setLoss(!loss);
+    setStart(false);
   };
+
+  function clearField() {
+    addedBombs();
+    findNextCell();
+    setRestart(true);
+    setStart(false);
+  };
+
+  React.useEffect(()=>{
+    if(start) {
+      addedBombs();
+      findNextCell();
+    }
+   },[start]);
 
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} loss={loss} />
-      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} />
+      <Header start={start} bombsCount={bombsCount} loss={loss} clearField={clearField} />
+      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} restart={restart} />
     </div>
   );
 }
