@@ -43,7 +43,15 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
       y:'-68px'
     },
     bomb:{
+      x:'53px',
+      y:'-135px'
+    },
+    bombClicked:{
       x:'37px',
+      y:'-135px'
+    },
+    bombDisarmed:{
+      x:'20px',
       y:'-135px'
     },
     question:{
@@ -66,13 +74,17 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
 
   function openCell() {   
     //setStart(true);
-    countStart(item)
-   if(!item.isBomb) {
-    setIsFlag(imgPosition[item.count]);
-    handelBlanckCell(item.count===0)
-   }else if(item.isBomb) {
-    openBombs();
-   };
+    if(isFlag.x===imgPosition.blanck.x) {
+      countStart(item)
+      if(!item.isBomb) {
+        setIsFlag(imgPosition[item.count]);
+        handelBlanckCell(item.count===0)
+      }else if(item.isBomb) {
+        item.state='opened';
+        openBombs();
+      };
+    }
+    
    
    //console.log(item);
   };
@@ -82,7 +94,7 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
     if(isFlag.x===imgPosition.blanck.x) {
       setIsFlag(imgPosition.flag);
       plantFlag();
-      //item.state='flag';
+      item.state='flag';
     }else if(isFlag.x===imgPosition.flag.x) {
       //item.state='question'
       removeFlag();
@@ -99,6 +111,10 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
        setIsFlag(imgPosition.bomb);
        //item.state='bomb';
        gameOver();
+      }else if(item.isBomb && item.state === 'opened') {
+        setIsFlag(imgPosition.bombClicked)
+      }else if(item.isBomb && item.state === 'flag') {
+        setIsFlag(imgPosition.bombDisarmed)
       }
     }
    },[bigBoom]);
