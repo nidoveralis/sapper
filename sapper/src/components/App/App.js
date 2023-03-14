@@ -12,23 +12,70 @@ function App() {
   const [ bombsCount, setBombsCount ] = React.useState(40);
   const bombs = []
   const field = [];
+  //const [ openCells, setOpenCells ] = React.useState([]);
   const openCells=[]
 
-  function getRandomArray() {//создаёт массив рандомных цифр
-  while(bombs.length < bombsCount){
-    let b = Math.round(Math.random() * 256)
-    if(bombs.indexOf(b) === -1) {
-      bombs.push(b);
-    } 
-    bombs.sort((a, b) => a - b);
-  }
+  function getFirstCell(item) {
+    const i=item.index
+    const nextCellsPosition =[
+      {
+        x:field[i].x-1,
+        y:field[i].y-1
+      },
+      {
+        x:field[i].x,
+        y:field[i].y-1
+      },
+      {
+        x:field[i].x+1,
+        y:field[i].y-1
+      },
+      {
+        x:field[i].x-1,
+        y:field[i].y
+      },
+      {
+        x:field[i].x+1,
+        y:field[i].y
+      },
+      {
+        x:field[i].x-1,
+        y:field[i].y+1
+      },
+      {
+        x:field[i].x,
+        y:field[i].y+1
+      },
+      {
+        x:field[i].x+1,
+        y:field[i].y+1
+      }
+    ];
+    field.find(cell =>{
+      for(let o=0;o<nextCellsPosition.length;o++) {
+        if(cell.x===nextCellsPosition[o].x && cell.y===nextCellsPosition[o].y){
+           item.sosed.push(cell.index);
+          }
+      }
+    });
+    getRandomArray(item)
+  };
+
+  function getRandomArray(item) {//создаёт массив рандомных цифр
+    while(bombs.length < bombsCount  ){
+      let b = Math.round(Math.random() * 256)
+      if(bombs.indexOf(b) === -1 && b!==item.index && item.sosed.indexOf(b) === -1) {
+         bombs.push(b);
+      } 
+      //bombs.sort((a, b) => a - b);
+    };
+    addedBombs();
 };
     
   function makeField() {
     for(let i =0; i<256; i++) {
       field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[], state:'blanck'})
     }
-    getRandomArray()
   };
 
   makeField();
@@ -68,7 +115,8 @@ function App() {
          } else {
           field[i].isBomb=false;
         }
-     } 
+     };
+     findNextCell()
   };
 
   function findOpenNextCells() {//открывает соседние клетки
@@ -84,33 +132,35 @@ function App() {
         })
       }
     })
+    //console.log(openCells)
   };
 
   function openBlankCells(item) {///открывает соседей
     if(!openCells.includes(item.index)) {
+
       openCells.push(item.index);
     if(item.count === 0) {
         findOpenNextCells();      
-    }}
+    }}    
   };
 
   function countStart(item) {
-   // if(openCells.length===0) {
-     // addedBombs();
-     // findNextCell();
-   // }
-    setStart(true)
-    setRestart(false)
-    //item.state='opened';
-    //openBlankCells(item);
-    //if(start) {
-      startGame(item);
-    //}
+    console.log(openCells)
+    console.log(start,'ppp')
+   // openBlankCells(item);
+    if(openCells.length===0) {
+   // if(!start) {
+      //findNextCell();
+      getFirstCell(item)
+  //    startGame(item)
+    }
+    openBlankCells(item);
   };
 
-  function startGame(item) {
-    item.state='opened';
-    openBlankCells(item);
+function startGame(item) {
+  setStart(true);
+  setRestart(false);
+  getFirstCell(item)
   };
 
   function plantFlag() {
@@ -131,19 +181,23 @@ function App() {
   };
 
   function clearField() {
-    addedBombs();
-    findNextCell();
     setRestart(true);
     setStart(false);
   };
 
   React.useEffect(()=>{
-    if(start) {
-      addedBombs();
-      findNextCell();
+    if(openCells.length>0) {
+         
     }
-   },[start]);
+    //if(start) {
+    //  addedBombs();
+    //  findNextCell();
+   // }
+   },[openCells]);
 
+
+  
+  
   return (
     <div className="App">
       <Header start={start} bombsCount={bombsCount} loss={loss} clearField={clearField} />

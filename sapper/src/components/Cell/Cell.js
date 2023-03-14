@@ -78,14 +78,12 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
       countStart(item)
       if(!item.isBomb) {
         setIsFlag(imgPosition[item.count]);
-        handelBlanckCell(item.count===0)
+        handelBlanckCell(item.count===0);
       }else if(item.isBomb) {
         item.state='opened';
         openBombs();
       };
     }
-    
-   
    //console.log(item);
   };
 
@@ -119,7 +117,7 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
     }
    },[bigBoom]);
 
-   React.useEffect((e)=>{
+   React.useEffect(()=>{
     if(open) {
       if(openCells.includes(item.index)) { 
        setIsFlag(imgPosition[item.count]);
@@ -130,7 +128,7 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
 
    React.useEffect((e)=>{
     if(restart) {
-      setIsFlag(imgPosition.blanck)
+      setIsFlag(imgPosition.blanck);
     }
    },[restart]);
 

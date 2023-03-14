@@ -5,7 +5,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 function Header({start, bombsCount, loss, clearField}) {
   const [ time, setTime ] = React.useState(0);
   const [smile, setSmile] = React.useState('-1px');
-  
+
   const seconds = time % 10;
   const tens = parseInt(time / 10);
   const hundreds = parseInt(time / 100);

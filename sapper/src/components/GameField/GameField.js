@@ -8,11 +8,7 @@ function GameField({field, openCells, countStart, plantFlag, removeFlag, startGa
   const [opened, setOpened] = React.useState(false);
 
 function handelBlanckCell(data) {
-  if(data) {
-    setOpened(true)
-  }else {
-    setOpened(false)
-  }
+  setOpened(data ? true : false);
 };
 
 function openBombs() {
