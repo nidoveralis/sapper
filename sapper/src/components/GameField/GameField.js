@@ -2,12 +2,14 @@ import React from 'react';
 import './GameField.css';
 import Cell from '../Cell/Cell';
 
-function GameField({field, openCells, countStart, plantFlag, removeFlag, startGame, gameOver, restart}) {
-
+function GameField({field, openCells, countStart,plantFlag, removeFlag, startGame, gameOver, restart, putFlag}) {
+//console.log(openCells)
   const [bigBoom, setBigBoom] = React.useState(false);
   const [opened, setOpened] = React.useState(false);
+  const [t, setT] = React.useState(false);
 
 function handelBlanckCell(data) {
+  
   setOpened(data ? true : false);
 };
 
@@ -23,7 +25,7 @@ React.useEffect(()=>{
 
   return(
     <div className='field'>
-      { field.map((item, index) => <Cell  key={index} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} openBombs={openBombs} item={item} handelBlanckCell={handelBlanckCell} open={opened} field={field} bigBoom={bigBoom} openCells={openCells} startGame={startGame} gameOver={gameOver} restart={restart} />) }
+      { field.map((item, index) => <Cell  key={index} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} openBombs={openBombs} item={item} handelBlanckCell={handelBlanckCell} open={opened} field={field} bigBoom={bigBoom} openCells={openCells} startGame={startGame} gameOver={gameOver} restart={restart} putFlag={putFlag} />) }
     </div>
   )
 }

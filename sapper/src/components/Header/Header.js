@@ -11,7 +11,7 @@ function Header({start, bombsCount, loss, clearField}) {
   const hundreds = parseInt(time / 100);
   
   function restartGame() {
-    startTime(0)
+    startTime(0);
     setSmile('-1px');
     clearField();
   };
@@ -19,7 +19,7 @@ function Header({start, bombsCount, loss, clearField}) {
   function startTime(data) {
     setTimeout(setTime, 1000, data);
   }
-
+  
   React.useEffect(() => {
     if(start) {
       startTime(time + 1)

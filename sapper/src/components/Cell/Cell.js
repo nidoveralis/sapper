@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,open,field,bigBoom,openCells,startGame,gameOver, restart}) {
+function Cell({countStart,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,field,bigBoom,openCells,startGame,gameOver, restart, putFlag}) {
 
   const imgPosition = {
     0:{
@@ -72,8 +72,8 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
   const backgroundX = openCells.includes(item.index) ? imgPosition[item.count].x : imgPosition.blanck.x;
   const backgroundY = openCells.includes(item.index) ? imgPosition[item.count].y : imgPosition.blanck.y;
 
-  function openCell() {   
-    //setStart(true);
+  function openCell() {
+    console.log(item)
     if(isFlag.x===imgPosition.blanck.x) {
       countStart(item)
       if(!item.isBomb) {
@@ -89,17 +89,10 @@ function Cell({countStart, plantFlag,removeFlag,openBombs,item,handelBlanckCell,
 
   function clickCell(e) {
     e.preventDefault();
-    if(isFlag.x===imgPosition.blanck.x) {
-      setIsFlag(imgPosition.flag);
-      plantFlag();
-      item.state='flag';
-    }else if(isFlag.x===imgPosition.flag.x) {
-      //item.state='question'
-      removeFlag();
-      setIsFlag(imgPosition.question);
-    }else if(isFlag.x===imgPosition.question.x) {
-      //item.state='blanck'
-      setIsFlag(imgPosition.blanck);
+    if(item.state!=='opened'){
+    putFlag(item);
+    //plantFlag()
+    setIsFlag(imgPosition[item.state]);
     }
   };
 

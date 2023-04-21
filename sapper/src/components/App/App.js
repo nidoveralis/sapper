@@ -12,8 +12,7 @@ function App() {
   const [ bombsCount, setBombsCount ] = React.useState(40);
   const bombs = []
   const field = [];
-  //const [ openCells, setOpenCells ] = React.useState([]);
-  const openCells=[]
+  const openCells=[];
 
   function getFirstCell(item) {
     const i=item.index
@@ -80,7 +79,7 @@ function App() {
 
   makeField();
 
-  function findNextCell() {///расставляет соседей
+  function addNextCells() {///расставляет соседей
     for(let i =0; i<field.length; i++) {
       if(!field[i].isBomb) {
         countNextCell(field[i],field[i].x-1,field[i].y-1);
@@ -116,7 +115,7 @@ function App() {
           field[i].isBomb=false;
         }
      };
-     findNextCell()
+     addNextCells()
   };
 
   function findOpenNextCells() {//открывает соседние клетки
@@ -137,71 +136,70 @@ function App() {
 
   function openBlankCells(item) {///открывает соседей
     if(!openCells.includes(item.index)) {
-
       openCells.push(item.index);
     if(item.count === 0) {
         findOpenNextCells();      
-    }}    
+    }};
   };
 
   function countStart(item) {
-    console.log(openCells)
-    console.log(start,'ppp')
-   // openBlankCells(item);
+   //setStart(true);
     if(openCells.length===0) {
-   // if(!start) {
-      //findNextCell();
-      getFirstCell(item)
-  //    startGame(item)
+      startGame(item)
+      //console.log(openCells)
     }
-    openBlankCells(item);
+      openBlankCells(item);
+
+    //console.log(openCells)
   };
 
+  function putFlag(data) {
+    if(data.state==='blanck') {
+      data.state='flag';
+    }else if(data.state==='flag') {
+      data.state='question';
+    }else if(data.state==='question') {
+      data.state='blanck';
+    }
+  };
+
+  
+
 function startGame(item) {
-  setStart(true);
+  getFirstCell(item);
+  //openBlankCells(item);
+  //setStart(true);
   setRestart(false);
-  getFirstCell(item)
   };
 
   function plantFlag() {
     if(bombsCount<=0) {
       setBombsCount(0);
     }else {
-      setBombsCount(bombsCount - 1);
+      setBombsCount(bombsCount-1);
     }
   };
 
   function removeFlag() {
-      setBombsCount(bombsCount + 1);
+    setBombsCount(bombsCount+1);
   };
 
   function gameOver() {
-    setLoss(!loss);
-    setStart(false);
+    setLoss(true);
+    //setStart(false);
   };
 
   function clearField() {
     setRestart(true);
-    setStart(false);
+    //setStart(false);
+    setLoss(false);
   };
 
-  React.useEffect(()=>{
-    if(openCells.length>0) {
-         
-    }
-    //if(start) {
-    //  addedBombs();
-    //  findNextCell();
-   // }
-   },[openCells]);
-
-
-  
   
   return (
     <div className="App">
       <Header start={start} bombsCount={bombsCount} loss={loss} clearField={clearField} />
-      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} restart={restart} />
+      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} restart={restart} putFlag={putFlag}/>
     </div>
   );
 }
