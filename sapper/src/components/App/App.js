@@ -3,16 +3,29 @@ import './App.css';
 import Header from '../Header/Header';
 import GameField from '../GameField/GameField';
 
+const field = [];
+
+function makeField() {
+  for(let i =0; i<256; i++) {
+   field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[], state:'blanck'})
+ }
+};
+
+makeField();
+
+const bombs = [];
+  
+const openCells=[];
+
 function App() {
  // const [firstCell, setFirstCell] = React.useState();
   const [start, setStart] = React.useState(false);
   const [loss, setLoss] = React.useState(false);
+  const [faceO, setfaceO] = React.useState(false);
   const [restart, setRestart] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
-  const bombs = []
-  const field = [];
-  const openCells=[];
+ 
 
   function getFirstCell(item) {
     const i=item.index
@@ -71,13 +84,7 @@ function App() {
     addedBombs();
 };
     
-  function makeField() {
-    for(let i =0; i<256; i++) {
-      field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[], state:'blanck'})
-    }
-  };
-
-  makeField();
+ 
 
   function addNextCells() {///расставляет соседей
     for(let i =0; i<field.length; i++) {
@@ -115,7 +122,7 @@ function App() {
           field[i].isBomb=false;
         }
      };
-     addNextCells()
+     addNextCells();
   };
 
   function findOpenNextCells() {//открывает соседние клетки
@@ -126,12 +133,11 @@ function App() {
             openCells.push(el);
             field[el].state='opened';
             findOpenNextCells();
-           // console.log(openCells.sort((a, b) => a - b))
+            //console.log(openCells.sort((a, b) => a - b))
           }
         })
       }
     })
-    //console.log(openCells)
   };
 
   function openBlankCells(item) {///открывает соседей
@@ -143,15 +149,27 @@ function App() {
   };
 
   function countStart(item) {
-   //setStart(true);
+    console.log(openCells.length)
+   // setfaceO(false);
     if(openCells.length===0) {
-      startGame(item)
-      //console.log(openCells)
+      startGame(item);
     }
       openBlankCells(item);
 
-    //console.log(openCells)
+    console.log(openCells)
   };
+
+  function plantFlag() {
+    if(bombsCount<=0) {
+      setBombsCount(0);
+    }else {
+      setBombsCount(bombsCount-1);
+    }
+  };
+  function removeFlag() {
+    setBombsCount(bombsCount + 1);
+  };
+
 
   function putFlag(data) {
     if(data.state==='blanck') {
@@ -163,43 +181,34 @@ function App() {
     }
   };
 
-  
-
 function startGame(item) {
-  getFirstCell(item);
-  //openBlankCells(item);
-  //setStart(true);
+  
+  setStart(true);
+    getFirstCell(item);
+    openBlankCells(item);
   setRestart(false);
   };
 
-  function plantFlag() {
-    if(bombsCount<=0) {
-      setBombsCount(0);
-    }else {
-      setBombsCount(bombsCount-1);
-    }
+  function changeFace() {
+    setfaceO(true);
   };
 
-  function removeFlag() {
-    setBombsCount(bombsCount+1);
-  };
-
+  
   function gameOver() {
     setLoss(true);
-    //setStart(false);
+    setStart(false);
   };
 
   function clearField() {
     setRestart(true);
-    //setStart(false);
+    setStart(false);
     setLoss(false);
   };
-
   
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} loss={loss} clearField={clearField} />
-      <GameField field={field} openCells={openCells} countStart={countStart} plantFlag={plantFlag} removeFlag={removeFlag} startGame={startGame} gameOver={gameOver} restart={restart} putFlag={putFlag}/>
+      <Header start={start} bombsCount={bombsCount} loss={loss} faceO={faceO} clearField={clearField} />
+      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}/>
     </div>
   );
 }
