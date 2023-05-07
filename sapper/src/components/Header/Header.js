@@ -2,7 +2,8 @@ import React from 'react';
 import './Header.css';
 import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 
-function Header({start, bombsCount, loss, clearField}) {
+function Header({start, bombsCount, loss, faceSurprised, clearField}) {
+
   const [ time, setTime ] = React.useState(0);
   const [smile, setSmile] = React.useState('-1px');
 
@@ -31,6 +32,10 @@ function Header({start, bombsCount, loss, clearField}) {
       setSmile('31px');
     }
   },[loss]);
+
+  React.useEffect(() => {
+   setSmile(faceSurprised ? '86px' : '-1px');
+  },[faceSurprised]);
 
   return (
     <div className="header">

@@ -18,10 +18,9 @@ const bombs = [];
 const openCells=[];
 
 function App() {
- // const [firstCell, setFirstCell] = React.useState();
   const [start, setStart] = React.useState(false);
   const [loss, setLoss] = React.useState(false);
-  const [faceO, setfaceO] = React.useState(false);
+  const [faceSurprised, setFaceSurprised] = React.useState(false);
   const [restart, setRestart] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
@@ -83,8 +82,6 @@ function App() {
     };
     addedBombs();
 };
-    
- 
 
   function addNextCells() {///расставляет соседей
     for(let i =0; i<field.length; i++) {
@@ -149,14 +146,11 @@ function App() {
   };
 
   function countStart(item) {
-    console.log(openCells.length)
-   // setfaceO(false);
     if(openCells.length===0) {
       startGame(item);
     }
-      openBlankCells(item);
-
-    console.log(openCells)
+    openBlankCells(item);
+    changeFace();
   };
 
   function plantFlag() {
@@ -166,6 +160,7 @@ function App() {
       setBombsCount(bombsCount-1);
     }
   };
+
   function removeFlag() {
     setBombsCount(bombsCount + 1);
   };
@@ -182,15 +177,14 @@ function App() {
   };
 
 function startGame(item) {
-  
   setStart(true);
-    getFirstCell(item);
-    openBlankCells(item);
+  getFirstCell(item);
+  openBlankCells(item);
   setRestart(false);
   };
 
   function changeFace() {
-    setfaceO(true);
+    setFaceSurprised(!faceSurprised);
   };
 
   
@@ -207,7 +201,7 @@ function startGame(item) {
   
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} loss={loss} faceO={faceO} clearField={clearField} />
+      <Header start={start} bombsCount={bombsCount} loss={loss} faceSurprised={faceSurprised} clearField={clearField} />
       <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}/>
     </div>
   );

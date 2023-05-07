@@ -90,7 +90,6 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
 
   function clickCell(e) {
     e.preventDefault();
-    
     if(item.state!=='opened'){
       if(isFlag.x === imgPosition.blanck.x) {
         item.state='flag';
@@ -109,6 +108,7 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
      // putFlag(item);
       setIsFlag(imgPosition[item.state]);
     }
+    changeFace();
   };
 
   React.useEffect((e)=>{
