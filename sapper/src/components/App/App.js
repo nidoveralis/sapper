@@ -150,7 +150,6 @@ function App() {
       startGame(item);
     }
     openBlankCells(item);
-    changeFace();
   };
 
   function plantFlag() {
@@ -197,6 +196,12 @@ function startGame(item) {
     setRestart(true);
     setStart(false);
     setLoss(false);
+    setBombsCount(40);
+    bombs.splice(0,bombs.length);
+    field.splice(0,field.length);
+    openCells.splice(0,openCells.length);
+    makeField();
+    console.log(field)
   };
   
   return (

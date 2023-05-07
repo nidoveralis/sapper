@@ -85,12 +85,13 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
         item.state='opened';
         openBombs();
       };
-    }
+    };
+    changeFace();
   };
 
   function clickCell(e) {
     e.preventDefault();
-    if(item.state!=='opened'){
+    if(item.state!=='opened' && startGame){
       if(isFlag.x === imgPosition.blanck.x) {
         item.state='flag';
         setIsFlag(imgPosition.flag);
@@ -107,8 +108,8 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
       //console.log(item)
      // putFlag(item);
       setIsFlag(imgPosition[item.state]);
+      changeFace();
     }
-    changeFace();
   };
 
   React.useEffect((e)=>{
@@ -146,7 +147,7 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
 
    React.useEffect((e)=>{
     if(restart) {
-     // setIsFlag(imgPosition.blanck);
+      setIsFlag(imgPosition.blanck);
     }
    },[restart]);
 
