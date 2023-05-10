@@ -24,7 +24,7 @@ function Header({start, bombsCount, emotions, clearField}) {
   
   function startTime(data) {
     setTimeout(setTime, 1000, data);
-  }
+  };
   
   React.useEffect(() => {
     if(start) {

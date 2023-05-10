@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlanckCell,open,openCells,startGame,gameOver, restart, putFlag, emotions}) {
+function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells,startGame,gameOver, restart, putFlag, emotions}) {
 
   const imgPosition = {
     0:{
@@ -69,21 +69,21 @@ function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlan
   };
   const [isFlag, setIsFlag] = React.useState(imgPosition.blanck);
 
-  function openCell() {
+  function handlerOpenCell() {
     if(item.state==='blanck') {
       item.state='opened';
-      countStart(item);
+      openingCell(item);
       if(!item.isBomb) {
         setIsFlag(imgPosition[item.count]);
-        handelBlanckCell(item.count===0);
       }else if(item.isBomb) {
         openBombs();
+        item.count = 'bombClicked';
       };
     };
     //changeFaceNormal();
   };
 
-  function clickCell(e) {
+  function handlerClickCell(e) {
     e.preventDefault();
     if(!gameOver) {
       putFlag(item);
@@ -95,9 +95,7 @@ function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlan
   React.useEffect((e)=>{
     if(emotions === 'loss') {
       if(item.isBomb) {
-        if(item.state === 'opened') {
-          setIsFlag(imgPosition.bombClicked)
-        }else if(item.state === 'flag') {
+        if(item.state === 'flag') {
           setIsFlag(imgPosition.bombDisarmed)
         }else {
           setIsFlag(imgPosition.bomb);
@@ -106,13 +104,10 @@ function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlan
     };
    },[gameOver]);
 
-   React.useEffect(()=>{////переделать
-    if(open) {
+   React.useEffect(()=>{
       if(openCells.includes(item.index)) { 
        setIsFlag(imgPosition[item.count]);
-       handelBlanckCell(false);////
       }
-    }
    },[startGame]);
 
    React.useEffect((e)=>{
@@ -123,7 +118,7 @@ function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlan
 
   return(
     <>
-      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={gameOver}/>
+      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={handlerClickCell} onMouseDown={changeFace} onClick={handlerOpenCell} disabled={gameOver}/>
     </>
   )
 }
