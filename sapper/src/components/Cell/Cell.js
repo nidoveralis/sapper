@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,bigBoom,openCells,startGame,gameOver, restart, putFlag}) {
+function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,bigBoom,openCells,startGame,gameOver, restart, putFlag, loss}) {
 
   const imgPosition = {
     0:{
@@ -68,29 +68,24 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
     }
   };
   const [isFlag, setIsFlag] = React.useState(imgPosition.blanck);
-  const [start, setStart] = React.useState(false);
-  const backgroundX = openCells.includes(item.index) ? imgPosition[item.count].x : imgPosition.blanck.x;
-  const backgroundY = openCells.includes(item.index) ? imgPosition[item.count].y : imgPosition.blanck.y;
 
   function openCell() {
-    console.log(item.state)
     if(item.state==='blanck') {
-      //item.state='opened';
+      item.state='opened';
       countStart(item);
       if(!item.isBomb) {
-        //item.state='opened';
         setIsFlag(imgPosition[item.count]);
         handelBlanckCell(item.count===0);
       }else if(item.isBomb) {
-        item.state='opened';
         openBombs();
       };
     };
-    changeFace();
+    changeFaceNormal();
   };
 
-  function clickCell(e) {
+  function clickCell(e) {//////переделать
     e.preventDefault();
+    console.log(item)
     if(item.state!=='opened' && startGame){
       if(isFlag.x === imgPosition.blanck.x) {
         item.state='flag';
@@ -105,10 +100,9 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
         item.state='blanck';
         setIsFlag(imgPosition.blanck);
       }
-      //console.log(item)
      // putFlag(item);
       setIsFlag(imgPosition[item.state]);
-      changeFace();
+      changeFaceNormal();
     }
   };
 
@@ -127,20 +121,20 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
     }
    },[bigBoom]);
 
-   React.useEffect(()=>{
-    if(open) {
-      if(openCells.includes(item.index)) { 
-       setIsFlag(imgPosition[item.count]);
-       handelBlanckCell(false);
-      }
-    }
-   },[open]);
+   //React.useEffect(()=>{
+    //if(open) {
+     // if(openCells.includes(item.index)) { 
+      // setIsFlag(imgPosition[item.count]);
+       //handelBlanckCell(false);
+     // }
+   // }
+   //},[open]);
 
-   React.useEffect(()=>{
+   React.useEffect(()=>{////переделать
     if(open) {
       if(openCells.includes(item.index)) { 
        setIsFlag(imgPosition[item.count]);
-       handelBlanckCell(false);
+       handelBlanckCell(false);////
       }
     }
    },[startGame]);
@@ -153,9 +147,8 @@ function Cell({countStart,changeFace,plantFlag, removeFlag, openBombs,item,hande
 
   return(
     <>
-      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={bigBoom}/>
+      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={bigBoom || loss==='win'}/>
     </>
   )
 }
 export default Cell;
-//      <div className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${item.isBomb ? isFlag.x : backgroundX}`, backgroundPositionY:`${item.isBomb ? isFlag.y : backgroundY}`}} onClick={openCell} onContextMenu={clickCell}  >

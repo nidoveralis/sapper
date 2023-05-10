@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import Header from '../Header/Header';
 import GameField from '../GameField/GameField';
@@ -13,18 +13,18 @@ function makeField() {
 
 makeField();
 
-const bombs = [];
-  
+const bombs = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,59];
+const bombsFree = [];
 const openCells=[];
 
 function App() {
+
   const [start, setStart] = React.useState(false);
-  const [loss, setLoss] = React.useState(false);
+  const [loss, setLoss] = React.useState('normal');
   const [faceSurprised, setFaceSurprised] = React.useState(false);
   const [restart, setRestart] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
- 
 
   function getFirstCell(item) {
     const i=item.index
@@ -73,13 +73,13 @@ function App() {
   };
 
   function getRandomArray(item) {//создаёт массив рандомных цифр
-    while(bombs.length < bombsCount  ){
-      let b = Math.round(Math.random() * 256)
-      if(bombs.indexOf(b) === -1 && b!==item.index && item.sosed.indexOf(b) === -1) {
-         bombs.push(b);
-      } 
-      //bombs.sort((a, b) => a - b);
-    };
+  //  while(bombs.length < bombsCount  ){
+    //  let b = Math.round(Math.random() * 255)
+    //  if(bombs.indexOf(b) === -1 && b!==item.index && item.sosed.indexOf(b) === -1) {
+    //     bombs.push(b);
+    //  }
+      ////bombs.sort((a, b) => a - b);
+    //};
     addedBombs();
 };
 
@@ -96,8 +96,7 @@ function App() {
         countNextCell(field[i],field[i].x+1,field[i].y+1);
       };
   };
-  console.log(field)
-  //setStart(true);
+  //console.log(field)
 };
 
   function countNextCell(item,x,y) {/// считатет бомбы и соседей
@@ -116,6 +115,7 @@ function App() {
          if(bombs.includes(i)) {
            field[i].isBomb=true;
          } else {
+          bombsFree.push(i);
           field[i].isBomb=false;
         }
      };
@@ -130,7 +130,6 @@ function App() {
             openCells.push(el);
             field[el].state='opened';
             findOpenNextCells();
-            //console.log(openCells.sort((a, b) => a - b))
           }
         })
       }
@@ -143,13 +142,26 @@ function App() {
     if(item.count === 0) {
         findOpenNextCells();      
     }};
+   
+  };
+
+  function startGame(item) {
+    setStart(true);
+    getFirstCell(item);
+    //openBlankCells(item);
+    setRestart(false);
   };
 
   function countStart(item) {
+    setLoss('normal');
+    //console.log(openCells.sort((a, b) => a - b))
     if(openCells.length===0) {
       startGame(item);
     }
-    openBlankCells(item);
+    openBlankCells(item);///////вынеси в отдельную функцию
+    if(openCells.length===216) {
+      winGame();
+    }
   };
 
   function plantFlag() {
@@ -164,7 +176,6 @@ function App() {
     setBombsCount(bombsCount + 1);
   };
 
-
   function putFlag(data) {
     if(data.state==='blanck') {
       data.state='flag';
@@ -175,39 +186,43 @@ function App() {
     }
   };
 
-function startGame(item) {
-  setStart(true);
-  getFirstCell(item);
-  openBlankCells(item);
-  setRestart(false);
+  function changeFace() {/////////
+    //setFaceSurprised(!faceSurprised);
+    setLoss('surprise');
   };
 
-  function changeFace() {
-    setFaceSurprised(!faceSurprised);
+  function changeFaceNormal() {/////////
+    //setFaceSurprised(!faceSurprised);
+    //setLoss('normal');
   };
 
-  
-  function gameOver() {
-    setLoss(true);
-    setStart(false);
-  };
-
-  function clearField() {
+  function clearField() {//////переделать
     setRestart(true);
     setStart(false);
-    setLoss(false);
+    setLoss('normal');
     setBombsCount(40);
     bombs.splice(0,bombs.length);
     field.splice(0,field.length);
     openCells.splice(0,openCells.length);
     makeField();
-    console.log(field)
+  };
+
+  function gameOver() {
+    setLoss('losss');
+    setStart(false);
+  };
+
+  function winGame() {
+    if(openCells.sort((a, b) => a - b).join('') === bombsFree.sort((a, b) => a - b).join('')) {
+      setLoss('win');
+      setStart(false);
+    };
   };
   
   return (
     <div className="App">
       <Header start={start} bombsCount={bombsCount} loss={loss} faceSurprised={faceSurprised} clearField={clearField} />
-      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}/>
+      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} changeFaceNormal={changeFaceNormal} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}  loss={loss}/>
     </div>
   );
 }
