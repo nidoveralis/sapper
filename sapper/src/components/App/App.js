@@ -13,7 +13,7 @@ function makeField() {
 
 makeField();
 
-const bombs = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,59];
+const bombs = [200,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,59];
 const bombsFree = [];
 const openCells=[];
 
@@ -142,26 +142,27 @@ function App() {
     if(item.count === 0) {
         findOpenNextCells();      
     }};
-   
+  };
+
+  function monitorOpenedCells(item) {
+    openBlankCells(item);
+    if(openCells.length===216) {
+      winGame();
+    };
   };
 
   function startGame(item) {
     setStart(true);
     getFirstCell(item);
-    //openBlankCells(item);
     setRestart(false);
   };
-
-  function countStart(item) {
-    console.log(openCells.length)
+  
+  function openingCell(item) {
     setEmotions('normal');
     if(openCells.length===0) {
       startGame(item);
-    }
-    openBlankCells(item);///////вынеси в отдельную функцию
-    if(openCells.length===216) {
-      winGame();
-    }
+    };
+    monitorOpenedCells(item);
   };
 
   function plantFlag() {
@@ -196,7 +197,7 @@ function App() {
     setEmotions('normal');
   };
 
-  function clearField() {//////переделать
+  function clearField() {
     setRestart(true);
     setStart(false);
     setGameOver(false);
@@ -224,21 +225,27 @@ function App() {
   
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} emotions={emotions} clearField={clearField} />
+      <Header 
+        start={start} 
+        bombsCount={bombsCount} 
+        emotions={emotions} 
+        clearField={clearField} 
+      />
       <GameField 
-      field={field} 
-      openCells={openCells} 
-      countStart={countStart} 
-      changeFace={changeFace} 
-      changeFaceNormal={changeFaceNormal} 
-      plantFlag={plantFlag} 
-      removeFlag={removeFlag} 
-      openBombs={openBombs} 
-      startGame={start} 
-      gameOver={gameOver} 
-      restart={restart} 
-      putFlag={putFlag}  
-      emotions={emotions}/>
+        field={field} 
+        openCells={openCells} 
+        openingCell={openingCell} 
+        changeFace={changeFace} 
+        changeFaceNormal={changeFaceNormal} 
+        plantFlag={plantFlag} 
+        removeFlag={removeFlag} 
+        openBombs={openBombs} 
+        startGame={start} 
+        gameOver={gameOver} 
+        restart={restart} 
+        putFlag={putFlag}  
+        emotions={emotions}
+      />
     </div>
   );
 }
