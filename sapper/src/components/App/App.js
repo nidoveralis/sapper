@@ -22,6 +22,7 @@ function App() {
   const [start, setStart] = React.useState(false);
   const [emotions, setEmotions] = React.useState('normal');
   const [restart, setRestart] = React.useState(false);
+  const [gameOver, setGameOver] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
 
@@ -187,17 +188,18 @@ function App() {
     }
   };
 
-  function changeFace() {/////////
-    setEmotions(start && 'surprise');
+  function changeFace() {
+    setEmotions('surprise');
   };
 
-  function changeFaceNormal() {/////////
+  function changeFaceNormal() {
     setEmotions('normal');
   };
 
   function clearField() {//////переделать
     setRestart(true);
     setStart(false);
+    setGameOver(false);
     setEmotions('normal');
     setBombsCount(40);
     bombs.splice(0,bombs.length);
@@ -206,23 +208,37 @@ function App() {
     makeField();
   };
 
-  function gameOver() {
-    setEmotions('losss');
+  function openBombs() {
+    setEmotions('loss');
     setStart(false);
+    setGameOver(true);
   };
 
   function winGame() {
-    console.log(openCells.length)
     if(openCells.sort((a, b) => a - b).join('') === bombsFree.sort((a, b) => a - b).join('')) {
       setEmotions('win');
       setStart(false);
+      setGameOver(true);
     };
   };
   
   return (
     <div className="App">
       <Header start={start} bombsCount={bombsCount} emotions={emotions} clearField={clearField} />
-      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} changeFaceNormal={changeFaceNormal} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}  emotions={emotions}/>
+      <GameField 
+      field={field} 
+      openCells={openCells} 
+      countStart={countStart} 
+      changeFace={changeFace} 
+      changeFaceNormal={changeFaceNormal} 
+      plantFlag={plantFlag} 
+      removeFlag={removeFlag} 
+      openBombs={openBombs} 
+      startGame={start} 
+      gameOver={gameOver} 
+      restart={restart} 
+      putFlag={putFlag}  
+      emotions={emotions}/>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,bigBoom,openCells,startGame,gameOver, restart, putFlag, emotions}) {
+function Cell({countStart,changeFace,changeFaceNormal, openBombs,item,handelBlanckCell,open,openCells,startGame,gameOver, restart, putFlag, emotions}) {
 
   const imgPosition = {
     0:{
@@ -85,25 +85,26 @@ function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, ope
 
   function clickCell(e) {
     e.preventDefault();
-    putFlag(item);
-    setIsFlag(imgPosition[item.state]);
-    changeFaceNormal();
+    if(!gameOver) {
+      putFlag(item);
+      setIsFlag(imgPosition[item.state]);
+      changeFaceNormal();
+    }
   };
 
   React.useEffect((e)=>{
-    if(bigBoom) {
+    if(emotions === 'loss') {
       if(item.isBomb) {
-       gameOver();
-       if(item.state === 'opened') {
-        setIsFlag(imgPosition.bombClicked)
-      }else if(item.state === 'flag') {
-        setIsFlag(imgPosition.bombDisarmed)
-      }else {
-        setIsFlag(imgPosition.bomb);
-      }
+        if(item.state === 'opened') {
+          setIsFlag(imgPosition.bombClicked)
+        }else if(item.state === 'flag') {
+          setIsFlag(imgPosition.bombDisarmed)
+        }else {
+          setIsFlag(imgPosition.bomb);
+        }
       } 
-    }
-   },[bigBoom]);
+    };
+   },[gameOver]);
 
    React.useEffect(()=>{////переделать
     if(open) {
@@ -122,7 +123,7 @@ function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, ope
 
   return(
     <>
-      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={bigBoom || emotions==='win'}/>
+      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={gameOver}/>
     </>
   )
 }
