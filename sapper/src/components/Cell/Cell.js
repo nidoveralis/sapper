@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,bigBoom,openCells,startGame,gameOver, restart, putFlag, loss}) {
+function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, openBombs,item,handelBlanckCell,open,bigBoom,openCells,startGame,gameOver, restart, putFlag, emotions}) {
 
   const imgPosition = {
     0:{
@@ -80,30 +80,14 @@ function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, ope
         openBombs();
       };
     };
-    changeFaceNormal();
+    //changeFaceNormal();
   };
 
-  function clickCell(e) {//////переделать
+  function clickCell(e) {
     e.preventDefault();
-    console.log(item)
-    if(item.state!=='opened' && startGame){
-      if(isFlag.x === imgPosition.blanck.x) {
-        item.state='flag';
-        setIsFlag(imgPosition.flag);
-        plantFlag();
-       // putFlag(item);
-      }else if(isFlag.x === imgPosition.flag.x) {
-        item.state='question';
-        setIsFlag(imgPosition.question);
-        removeFlag()
-      }else if(isFlag.x === imgPosition.question.x) {
-        item.state='blanck';
-        setIsFlag(imgPosition.blanck);
-      }
-     // putFlag(item);
-      setIsFlag(imgPosition[item.state]);
-      changeFaceNormal();
-    }
+    putFlag(item);
+    setIsFlag(imgPosition[item.state]);
+    changeFaceNormal();
   };
 
   React.useEffect((e)=>{
@@ -120,15 +104,6 @@ function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, ope
       } 
     }
    },[bigBoom]);
-
-   //React.useEffect(()=>{
-    //if(open) {
-     // if(openCells.includes(item.index)) { 
-      // setIsFlag(imgPosition[item.count]);
-       //handelBlanckCell(false);
-     // }
-   // }
-   //},[open]);
 
    React.useEffect(()=>{////переделать
     if(open) {
@@ -147,7 +122,7 @@ function Cell({countStart,changeFace,changeFaceNormal,plantFlag, removeFlag, ope
 
   return(
     <>
-      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={bigBoom || loss==='win'}/>
+      <button className='cell' style={{ backgroundImage: `url(${cell})`, backgroundPositionX:`${isFlag.x}`, backgroundPositionY:`${isFlag.y}`}} onContextMenu={clickCell} onMouseDown={changeFace} onClick={openCell} disabled={bigBoom || emotions==='win'}/>
     </>
   )
 }

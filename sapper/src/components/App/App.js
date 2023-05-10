@@ -20,8 +20,7 @@ const openCells=[];
 function App() {
 
   const [start, setStart] = React.useState(false);
-  const [loss, setLoss] = React.useState('normal');
-  const [faceSurprised, setFaceSurprised] = React.useState(false);
+  const [emotions, setEmotions] = React.useState('normal');
   const [restart, setRestart] = React.useState(false);
 
   const [ bombsCount, setBombsCount ] = React.useState(40);
@@ -153,8 +152,8 @@ function App() {
   };
 
   function countStart(item) {
-    setLoss('normal');
-    //console.log(openCells.sort((a, b) => a - b))
+    console.log(openCells.length)
+    setEmotions('normal');
     if(openCells.length===0) {
       startGame(item);
     }
@@ -179,27 +178,27 @@ function App() {
   function putFlag(data) {
     if(data.state==='blanck') {
       data.state='flag';
+      plantFlag();
     }else if(data.state==='flag') {
       data.state='question';
+      removeFlag()
     }else if(data.state==='question') {
       data.state='blanck';
     }
   };
 
   function changeFace() {/////////
-    //setFaceSurprised(!faceSurprised);
-    setLoss('surprise');
+    setEmotions(start && 'surprise');
   };
 
   function changeFaceNormal() {/////////
-    //setFaceSurprised(!faceSurprised);
-    //setLoss('normal');
+    setEmotions('normal');
   };
 
   function clearField() {//////переделать
     setRestart(true);
     setStart(false);
-    setLoss('normal');
+    setEmotions('normal');
     setBombsCount(40);
     bombs.splice(0,bombs.length);
     field.splice(0,field.length);
@@ -208,21 +207,22 @@ function App() {
   };
 
   function gameOver() {
-    setLoss('losss');
+    setEmotions('losss');
     setStart(false);
   };
 
   function winGame() {
+    console.log(openCells.length)
     if(openCells.sort((a, b) => a - b).join('') === bombsFree.sort((a, b) => a - b).join('')) {
-      setLoss('win');
+      setEmotions('win');
       setStart(false);
     };
   };
   
   return (
     <div className="App">
-      <Header start={start} bombsCount={bombsCount} loss={loss} faceSurprised={faceSurprised} clearField={clearField} />
-      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} changeFaceNormal={changeFaceNormal} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}  loss={loss}/>
+      <Header start={start} bombsCount={bombsCount} emotions={emotions} clearField={clearField} />
+      <GameField field={field} openCells={openCells} countStart={countStart} changeFace={changeFace} changeFaceNormal={changeFaceNormal} plantFlag={plantFlag} removeFlag={removeFlag} startGame={start} gameOver={gameOver} restart={restart} putFlag={putFlag}  emotions={emotions}/>
     </div>
   );
 }
