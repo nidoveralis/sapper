@@ -8,3 +8,9 @@
   justify-content: center;
   flex-direction: column;
 }
+
+.game-space {
+  background-color: #BDBDBD;
+  border: outset 5px;
+  padding: 10px;
+}

@@ -217,26 +217,29 @@ function App() {
   
   return (
     <div className="App">
-      <Header 
-        start={start} 
-        bombsCount={bombsCount} 
-        emotions={emotions} 
-        clearField={clearField} 
-      />
-      <GameField 
-        field={FIELD} 
-        openCells={OPEN_CELLS} 
-        openingCell={openingCell} 
-        changeFace={changeFace} 
-        changeFaceNormal={changeFaceNormal} 
-        plantFlag={plantFlag} 
-        removeFlag={removeFlag} 
-        openBombs={openBombs} 
-        gameOver={gameOver} 
-        restart={restart} 
-        putFlag={putFlag}  
-        emotions={emotions}
-      />
+      <div className="game-space">
+        <Header 
+          start={start} 
+          bombsCount={bombsCount} 
+          emotions={emotions} 
+          clearField={clearField} 
+        />
+
+        <GameField 
+          field={FIELD} 
+          openCells={OPEN_CELLS} 
+          openingCell={openingCell} 
+          changeFace={changeFace} 
+          changeFaceNormal={changeFaceNormal} 
+          plantFlag={plantFlag} 
+          removeFlag={removeFlag} 
+          openBombs={openBombs} 
+          gameOver={gameOver} 
+          restart={restart} 
+          putFlag={putFlag}  
+          emotions={emotions}
+          />
+      </div>
     </div>
   );
 }
