@@ -1,0 +1,7 @@
+const FIELD_SIZE = 256;
+const NUMBER_OF_BOMBS = 40;
+
+export {
+  FIELD_SIZE,
+  NUMBER_OF_BOMBS
+}

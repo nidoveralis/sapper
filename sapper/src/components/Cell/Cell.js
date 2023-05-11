@@ -3,7 +3,7 @@ import cell from '../../images/minesweeper-sprites_9TPZzv3.png';
 import './Cell.css';
 
 
-function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells,startGame,gameOver, restart, putFlag, emotions}) {
+function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells,gameOver, restart, putFlag, emotions, openNullCells, opening}) {
 
   const imgPosition = {
     0:{
@@ -75,15 +75,15 @@ function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells
       openingCell(item);
       if(!item.isBomb) {
         setIsFlag(imgPosition[item.count]);
+        if (item.count===0) openNullCells();
       }else if(item.isBomb) {
         openBombs();
-        item.count = 'bombClicked';
       };
     };
     //changeFaceNormal();
   };
 
-  function handlerClickCell(e) {
+  function handlerClickCell(e) {console.log(item)
     e.preventDefault();
     if(!gameOver) {
       putFlag(item);
@@ -97,6 +97,8 @@ function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells
       if(item.isBomb) {
         if(item.state === 'flag') {
           setIsFlag(imgPosition.bombDisarmed)
+        }else if(item.state === 'opened') {
+          setIsFlag(imgPosition.bombClicked)
         }else {
           setIsFlag(imgPosition.bomb);
         }
@@ -105,10 +107,13 @@ function Cell({openingCell,changeFace,changeFaceNormal, openBombs,item,openCells
    },[gameOver]);
 
    React.useEffect(()=>{
+    if(opening) {
       if(openCells.includes(item.index)) { 
-       setIsFlag(imgPosition[item.count]);
-      }
-   },[startGame]);
+        setIsFlag(imgPosition[item.count]);
+        openNullCells();
+       }
+    }
+   },[opening]);
 
    React.useEffect((e)=>{
     if(restart) {

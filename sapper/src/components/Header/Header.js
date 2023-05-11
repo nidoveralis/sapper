@@ -43,9 +43,9 @@ function Header({start, bombsCount, emotions, clearField}) {
         
       </div>
       <div className='second-count counts'>
-      <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(14 - (14 * hundreds))}px`}} />
-        <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(14 - (14 * tens))}px`}} />
-        <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(14 - (14 * seconds))}px`}} />
+      <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(13 + (14 * (10 - hundreds)))}px`}} />
+        <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(13 + (14 * (10 - tens)))}px`}} />
+        <div className='count' style={{ backgroundImage: `url(${cell})`, backgroundPositionX: `${(13 + (14 * (10 - seconds)))}px`}} />
       </div>
     </div>
   );

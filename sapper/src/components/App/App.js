@@ -2,20 +2,13 @@ import React from 'react';
 import './App.css';
 import Header from '../Header/Header';
 import GameField from '../GameField/GameField';
-
-const field = [];
-
-function makeField() {
-  for(let i =0; i<256; i++) {
-   field.push({index: i, isBomb:false, count:0, x: Math.floor(i%16), y: Math.floor(i/16), sosed:[], state:'blanck'})
- }
-};
+import {FIELD_SIZE, NUMBER_OF_BOMBS} from '../../utils/constants';
+import {BOMBS, BOMBS_FREE, OPEN_CELLS, FIELD, makeField} from '../../utils/utils';
 
 makeField();
 
-const bombs = [200,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,59];
-const bombsFree = [];
-const openCells=[];
+//const bombs = [200,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,59];
+
 
 function App() {
 
@@ -23,46 +16,68 @@ function App() {
   const [emotions, setEmotions] = React.useState('normal');
   const [restart, setRestart] = React.useState(false);
   const [gameOver, setGameOver] = React.useState(false);
+  const [ bombsCount, setBombsCount ] = React.useState(NUMBER_OF_BOMBS);
 
-  const [ bombsCount, setBombsCount ] = React.useState(40);
+
+  function addedBombs() {///ставит бомбы
+    for(let i =0; i<FIELD_SIZE; i++) {
+         if(BOMBS.includes(i)) {
+          FIELD[i].isBomb=true;
+         } else {
+          BOMBS_FREE.push(i);
+          FIELD[i].isBomb=false;
+        }
+     };
+     addNextCells();
+  };
+
+  function getRandomArray(item) {//создаёт массив рандомных цифр
+      while(BOMBS.length < bombsCount  ){
+        let b = Math.round(Math.random() * (FIELD_SIZE - 1))
+        if(BOMBS.indexOf(b) === -1 && b!==item.index && item.sosed.indexOf(b) === -1) {
+          BOMBS.push(b);
+        }
+      };
+      addedBombs();
+  };
 
   function getFirstCell(item) {
     const i=item.index
     const nextCellsPosition =[
       {
-        x:field[i].x-1,
-        y:field[i].y-1
+        x:FIELD[i].x-1,
+        y:FIELD[i].y-1
       },
       {
-        x:field[i].x,
-        y:field[i].y-1
+        x:FIELD[i].x,
+        y:FIELD[i].y-1
       },
       {
-        x:field[i].x+1,
-        y:field[i].y-1
+        x:FIELD[i].x+1,
+        y:FIELD[i].y-1
       },
       {
-        x:field[i].x-1,
-        y:field[i].y
+        x:FIELD[i].x-1,
+        y:FIELD[i].y
       },
       {
-        x:field[i].x+1,
-        y:field[i].y
+        x:FIELD[i].x+1,
+        y:FIELD[i].y
       },
       {
-        x:field[i].x-1,
-        y:field[i].y+1
+        x:FIELD[i].x-1,
+        y:FIELD[i].y+1
       },
       {
-        x:field[i].x,
-        y:field[i].y+1
+        x:FIELD[i].x,
+        y:FIELD[i].y+1
       },
       {
-        x:field[i].x+1,
-        y:field[i].y+1
+        x:FIELD[i].x+1,
+        y:FIELD[i].y+1
       }
     ];
-    field.find(cell =>{
+    FIELD.find(cell => {
       for(let o=0;o<nextCellsPosition.length;o++) {
         if(cell.x===nextCellsPosition[o].x && cell.y===nextCellsPosition[o].y){
            item.sosed.push(cell.index);
@@ -72,35 +87,24 @@ function App() {
     getRandomArray(item)
   };
 
-  function getRandomArray(item) {//создаёт массив рандомных цифр
-  //  while(bombs.length < bombsCount  ){
-    //  let b = Math.round(Math.random() * 255)
-    //  if(bombs.indexOf(b) === -1 && b!==item.index && item.sosed.indexOf(b) === -1) {
-    //     bombs.push(b);
-    //  }
-      ////bombs.sort((a, b) => a - b);
-    //};
-    addedBombs();
-};
-
   function addNextCells() {///расставляет соседей
-    for(let i =0; i<field.length; i++) {
-      if(!field[i].isBomb) {
-        countNextCell(field[i],field[i].x-1,field[i].y-1);
-        countNextCell(field[i],field[i].x,field[i].y-1);
-        countNextCell(field[i],field[i].x+1,field[i].y-1);
-        countNextCell(field[i],field[i].x-1,field[i].y);
-        countNextCell(field[i],field[i].x+1,field[i].y);
-        countNextCell(field[i],field[i].x-1,field[i].y+1);
-        countNextCell(field[i],field[i].x,field[i].y+1);
-        countNextCell(field[i],field[i].x+1,field[i].y+1);
+    for(let i =0; i<FIELD.length; i++) {
+      if(!FIELD[i].isBomb) {
+        countNextCell(FIELD[i],FIELD[i].x-1,FIELD[i].y-1);
+        countNextCell(FIELD[i],FIELD[i].x,FIELD[i].y-1);
+        countNextCell(FIELD[i],FIELD[i].x+1,FIELD[i].y-1);
+        countNextCell(FIELD[i],FIELD[i].x-1,FIELD[i].y);
+        countNextCell(FIELD[i],FIELD[i].x+1,FIELD[i].y);
+        countNextCell(FIELD[i],FIELD[i].x-1,FIELD[i].y+1);
+        countNextCell(FIELD[i],FIELD[i].x,FIELD[i].y+1);
+        countNextCell(FIELD[i],FIELD[i].x+1,FIELD[i].y+1);
       };
   };
   //console.log(field)
 };
 
   function countNextCell(item,x,y) {/// считатет бомбы и соседей
-    let el = field.find(cell =>{
+    let el = FIELD.find(cell =>{
       if(cell.x===x && cell.y===y)
       if(cell.isBomb) {
            item.count++
@@ -110,25 +114,13 @@ function App() {
     })
   };
 
-  function addedBombs() {///ставит бомбы
-    for(let i =0; i<256; i++) {
-         if(bombs.includes(i)) {
-           field[i].isBomb=true;
-         } else {
-          bombsFree.push(i);
-          field[i].isBomb=false;
-        }
-     };
-     addNextCells();
-  };
-
   function findOpenNextCells() {//открывает соседние клетки
-    openCells.forEach(item=>{
-      if(field[item].count===0) {
-        field[item].sosed.forEach((el)=>{
-          if(!openCells.includes(el)) {
-            openCells.push(el);
-            field[el].state='opened';
+    OPEN_CELLS.forEach(item=>{
+      if(FIELD[item].count===0) {
+        FIELD[item].sosed.forEach((el)=>{
+          if(!OPEN_CELLS.includes(el)) {
+            OPEN_CELLS.push(el);
+            FIELD[el].state='opened';
             findOpenNextCells();
           }
         })
@@ -137,8 +129,8 @@ function App() {
   };
 
   function openBlankCells(item) {///открывает соседей
-    if(!openCells.includes(item.index)) {
-      openCells.push(item.index);
+    if(!OPEN_CELLS.includes(item.index)) {
+      OPEN_CELLS.push(item.index);
     if(item.count === 0) {
         findOpenNextCells();      
     }};
@@ -146,7 +138,7 @@ function App() {
 
   function monitorOpenedCells(item) {
     openBlankCells(item);
-    if(openCells.length===216) {
+    if(OPEN_CELLS.length===(FIELD_SIZE - NUMBER_OF_BOMBS)) {
       winGame();
     };
   };
@@ -159,7 +151,7 @@ function App() {
   
   function openingCell(item) {
     setEmotions('normal');
-    if(openCells.length===0) {
+    if(OPEN_CELLS.length===0) {
       startGame(item);
     };
     monitorOpenedCells(item);
@@ -202,10 +194,10 @@ function App() {
     setStart(false);
     setGameOver(false);
     setEmotions('normal');
-    setBombsCount(40);
-    bombs.splice(0,bombs.length);
-    field.splice(0,field.length);
-    openCells.splice(0,openCells.length);
+    setBombsCount(NUMBER_OF_BOMBS);
+    BOMBS.splice(0,BOMBS.length);
+    FIELD.splice(0,FIELD.length);
+    OPEN_CELLS.splice(0,OPEN_CELLS.length);
     makeField();
   };
 
@@ -216,7 +208,7 @@ function App() {
   };
 
   function winGame() {
-    if(openCells.sort((a, b) => a - b).join('') === bombsFree.sort((a, b) => a - b).join('')) {
+    if(OPEN_CELLS.sort((a, b) => a - b).join('') === BOMBS_FREE.sort((a, b) => a - b).join('')) {
       setEmotions('win');
       setStart(false);
       setGameOver(true);
@@ -232,15 +224,14 @@ function App() {
         clearField={clearField} 
       />
       <GameField 
-        field={field} 
-        openCells={openCells} 
+        field={FIELD} 
+        openCells={OPEN_CELLS} 
         openingCell={openingCell} 
         changeFace={changeFace} 
         changeFaceNormal={changeFaceNormal} 
         plantFlag={plantFlag} 
         removeFlag={removeFlag} 
         openBombs={openBombs} 
-        startGame={start} 
         gameOver={gameOver} 
         restart={restart} 
         putFlag={putFlag}  

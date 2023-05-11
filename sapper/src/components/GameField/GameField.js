@@ -2,8 +2,13 @@ import React from 'react';
 import './GameField.css';
 import Cell from '../Cell/Cell';
 
-function GameField({field, openCells, openingCell, changeFace, changeFaceNormal, openBombs, startGame, gameOver, restart, putFlag, emotions}) {
+function GameField({field, openCells, openingCell, changeFace, changeFaceNormal, openBombs, gameOver, restart, putFlag, emotions}) {
+  const [opening, setOpening] = React.useState(false);
 
+  function openNullCells() {
+    setOpening(!opening)
+  };
+  
   return(
     <div className='field'>
       { field.map((item, index) =>
@@ -14,12 +19,14 @@ function GameField({field, openCells, openingCell, changeFace, changeFaceNormal,
         changeFaceNormal={changeFaceNormal}  
         openBombs={openBombs} 
         item={item} 
-        openCells={openCells} 
-        startGame={startGame} 
+        openCells={openCells}  
         gameOver={gameOver} 
         restart={restart} 
         putFlag={putFlag} 
-        emotions={emotions} />) }
+        emotions={emotions}
+        openNullCells={openNullCells}
+        opening={opening}
+        />) }
     </div>
   )
 }
